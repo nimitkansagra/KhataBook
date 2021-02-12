@@ -1,5 +1,11 @@
 <?php
     include 'config.php';
+    $entryid;
+    $partyid;
+    if (isset($_REQUEST['entryid']) && isset($_REQUEST['partyid'])) {
+        $entryid = $_REQUEST['entryid'];
+        $partyid = $_REQUEST['partyid'];
+    }
  ?>
 <!DOCTYPE html>
 <!--
@@ -52,46 +58,65 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </div>
                         <!-- /.box-header -->
                         <!-- form start -->
+                        <?php
+                            $sql = "SELECT * FROM party WHERE id='$partyid'";
+                            //echo $sql;
+                            $result = mysqli_query($conn, $sql);
+
+                            if (mysqli_num_rows($result) > 0) {
+                            $row = mysqli_fetch_assoc($result);
+                        ?>
                         <form method="post" action= "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" role="form">
                             <div class="box-body">
                                 <input type="text" id="party_id" name="party_id" hidden>
                                 <div class="col-md-12 form-group">
                                     <label for="exampleInputEmail1">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter name">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<?php echo $row['name']; ?>" readonly>
                                 </div>
                                 <div class="col-md-12" id="partylist"></div>
                                 <div class="col-md-6 form-group">
                                     <label for="exampleInputEmail1">Email address</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" readonly>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address" value="<?php echo $row['email']; ?>" readonly>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="exampleInputEmail1">Phone number</label>
-                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" readonly>
+                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Enter phone number" value="<?php echo $row['phone']; ?>" readonly>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <label for="comment">Address</label>
-                                    <textarea class="form-control" rows="5" id="address" name="address" readonly></textarea>
+                                    <textarea class="form-control" rows="5" name="address"><?php echo trim($row['address'],"\t"); ?></textarea>
                                 </div>
+                                <?php
+                                    }
+                                    $sql1 = "SELECT * FROM entries WHERE id='$entryid'";
+                                    //echo $sql1;
+                                    $result1 = mysqli_query($conn, $sql1);
 
+                                    if (mysqli_num_rows($result) > 0) {
+                                    $row1 = mysqli_fetch_assoc($result1);
+                                 ?>
                                 <div class="col-md-6 form-group">
                                     <label for="exampleInputEmail1">Amount</label>
-                                    <input type="text" class="form-control" name="amount" placeholder="Enter amount">
+                                    <input type="text" class="form-control" name="amount" placeholder="Enter amount" value="<?php echo $row1['amount']; ?>">
                                 </div>
+                                <input type="hidden" name="entryid" value="<?php echo $row1['id']; ?>" >
                                 <div class="col-md-6 form-group">
                                     <label>Select Type</label>
                                     <select class="form-control" name="type">
-                                        <option value="Credit">Credit</option>
-                                        <option value="Debit">Debit</option>
+                                        <option value="Credit" <?php if($row1['type']=="Credit"){ echo 'selected="selected"';}?>>Credit</option>
+                                        <option value="Debit" <?php if($row1['type']=="Debit"){ echo 'selected="selected"';}?>>Debit</option>
                                   </select>
                                 </div>
 
                                 <div class="col-md-12 form-group">
                                     <label for="comment">Note</label>
-                                    <textarea class="form-control" rows="5" name="note"></textarea>
+                                    <textarea class="form-control" rows="5" name="note"><?php echo trim($row1['note'],"\t"); ?></textarea>
                                 </div>
                             </div>
                             <!-- /.box-body -->
-
+                            <?php
+                                }
+                             ?>
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-primary btn-block" name="submit">Save</button>
                             </div>
@@ -99,18 +124,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <?php
                             if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 if (isset($_POST['submit'])) {
-                                    $party_id = $_POST['party_id'];
+                                    $entry_id = $_POST['entryid'];
                                     $amount = $_POST['amount'];
                                     $type = $_POST['type'];
                                     $note = $_POST['note'];
 
-                                    $sql = "INSERT INTO entries (party_id,amount,type,note) VALUES ('$party_id','$amount','$type','$note')";
+                                    $sql3 = "UPDATE entries SET amount='$amount',type='$type',note='$note' WHERE id='$entry_id'";
+                                    echo $sql3;
 
-                                    if (mysqli_query($conn, $sql)) {
-                                        echo '<script>alert("Inserted !");</script>';
+                                    if (mysqli_query($conn, $sql3)) {
+                                        echo "<script>alert('Data Updated');</script>";
+                                        //echo "<script>window.location='editparty.php?id={$id}';</script>";
+                                        echo "<script>window.location='viewentry.php';</script>";
                                     }
-                                    else {
-                                        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+                                    else{
+                                        //echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+                                        echo "<script>alert('Error while updating data');</script>";
+                                        echo "<script>window.location='viewentry.php';</script>";
                                     }
 
                                     mysqli_close($conn);

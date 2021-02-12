@@ -56,9 +56,10 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
                                             <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Amount</th>
+                                            <th>Email</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>
@@ -74,10 +75,11 @@
                                         ?>
                                                 <tr>
                                                     <td><a href="<?php echo "viewpartyprofile.php?partyid=".$row['id']; ?>"><?php echo $row['id']; ?></a></td>
-                                                    <td><?php echo $row['name']; ?></td>
-                                                    <td><?php echo $row['email']; ?></td>
-                                                    <td><?php echo $row['phone']; ?></td>
+                                                    <td><a href="<?php echo "viewpartyprofile.php?partyid=".$row['id']; ?>"><?php echo $row['name']; ?></a></td>
                                                     <td><?php echo $row['address']; ?></td>
+                                                    <td><?php echo $row['phone']; ?></td>
+                                                    <td>00</td>
+                                                    <td><?php echo $row['email']; ?></td>
                                                     <td><a href="<?php echo "editparty.php?id=".$row['id']; ?>"><i class="fa fa-edit"></i></a></td>
                                                     <td><a href="<?php echo "deleteparty.php?id=".$row['id']; ?>" onclick="return confirm('Are you sure to delete party and all of teir entries?')"><i class="fa fa-trash"></i></a></td>
                                                 </tr>
@@ -91,9 +93,10 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Phone</th>
                                             <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Amount</th>
+                                            <th>Email</th>
                                             <th>Edit</th>
                                             <th>Delete</th>
                                         </tr>

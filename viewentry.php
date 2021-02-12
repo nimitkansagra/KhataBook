@@ -67,7 +67,7 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                            $sql = "SELECT party.id,name,address,amount,type,note,added_on FROM party join entries on party.id = entries.party_id";
+                                            $sql = "SELECT party.id AS partyid,entries.id AS entryid,name,address,amount,type,note,added_on FROM party join entries on party.id = entries.party_id";
                                             //echo $sql;
                                             $result = mysqli_query($conn, $sql);
 
@@ -75,17 +75,16 @@
                                             // output data of each row
                                                 while($row = mysqli_fetch_assoc($result)) {
                                         ?>
-                                                <tr class="<?php
-                                                    if ($row['type']=="Credit"){echo "text-green";} else {echo "text-red";} ?>">
-                                                    <td><a href="<?php echo "viewpartyprofile.php?partyid=".$row['id']; ?>"><?php echo $row['id']; ?></a></td>
-                                                    <td><?php echo $row['name']; ?></td>
+                                                <tr class="<?php if ($row['type']=="Credit"){echo "text-green";} else {echo "text-red";} ?>">
+                                                    <td><a href="<?php echo "viewpartyprofile.php?partyid=".$row['partyid']; ?>"><?php echo $row['partyid']; ?></a></td>
+                                                    <td><a href="<?php echo "viewpartyprofile.php?partyid=".$row['partyid']; ?>"><?php echo $row['name']; ?></a></td>
                                                     <td><?php echo $row['address']; ?></td>
                                                     <td><?php echo $row['amount']; ?></td>
                                                     <td><?php echo $row['type']; ?></td>
                                                     <td><?php echo $row['note']; ?></td>
                                                     <td><?php echo $row['added_on']; ?></td>
-                                                    <td><a href="#"><i class="fa fa-edit"></i></a></td>
-                                                    <td><a href="#"><i class="fa fa-trash"></i></a></td>
+                                                    <td><a href="<?php echo "editentry.php?partyid=".$row['partyid']."&entryid=".$row['entryid']; ?>"><i class="fa fa-edit"></i></a></td>
+                                                    <td><a href="<?php echo "deleteentry.php?id=".$row['entryid']; ?>"><i class="fa fa-trash"></i></a></td>
                                                 </tr>
                                         <?php
                                                 }
